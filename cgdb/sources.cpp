@@ -815,10 +815,16 @@ int source_display(struct sviewer *sview, int focus, enum win_refresh dorefresh)
     int exe_block_attr, sel_block_attr;
     char fmt[16];
     int width, height;
-    int focus_attr = focus ? SWIN_A_REVERSE : 0;
+    // int focus_attr = focus ? SWIN_A_REVERSE : 0;
     int showmarks = cgdbrc_get_int(CGDBRC_SHOWMARKS);
     int hlsearch = cgdbrc_get_int(CGDBRC_HLSEARCH);
     int mark_attr;
+
+    // make it clear we are in CGDB source window ...
+    int cpair = hl_groups_get_attr(hl_groups_instance, HLG_YELLOW);
+    int focus_attr = cpair;
+    if (focus)
+        focus_attr |= SWIN_A_REVERSE | SWIN_A_DIM;
 
     struct hl_line_attr *sel_highlight_attrs = 0;
     struct hl_line_attr *exe_highlight_attrs = 0;
