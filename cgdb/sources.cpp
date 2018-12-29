@@ -815,7 +815,7 @@ int source_display(struct sviewer *sview, int focus, enum win_refresh dorefresh)
     int exe_block_attr, sel_block_attr;
     char fmt[16];
     int width, height;
-    int focus_attr = focus ? SWIN_A_BOLD : 0;
+    int focus_attr = focus ? SWIN_A_REVERSE : 0;
     int showmarks = cgdbrc_get_int(CGDBRC_SHOWMARKS);
     int hlsearch = cgdbrc_get_int(CGDBRC_HLSEARCH);
     int mark_attr;
