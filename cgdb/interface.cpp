@@ -747,21 +747,28 @@ static void if_run_command(struct sviewer *sview, const std::string &command)
     }
 
     // to avoid gdb machine interface (MI) logging issue
-    // TODO: add this cmd to parser ...
+    // TODO: add this cmd to language parser ...
     extern int log_gdb_output;
-    if (strcmp(command.c_str(), "set logging on") == 0)
+    int nflds;
+    char cmd1[256], cmd2[256], cmd3[256];
+    nflds = sscanf(command.c_str(), "%s%s%s", cmd1, cmd2, cmd3);
+    if (nflds == 3)
     {
-        log_gdb_output = 1;
-        update_status_win(WIN_NO_REFRESH);
-        if_draw();
-        return;
-    }
-    else if (strcmp(command.c_str(), "set logging off") == 0)
-    {
-        log_gdb_output = 0;
-        update_status_win(WIN_NO_REFRESH);
-        if_draw();
-        return;
+        if (strcasecmp(cmd1, "set") == 0)
+        {
+            if ( (strcasecmp(cmd2, "log") == 0) || (strcasecmp(cmd2, "logging") == 0) ||
+                 (strcasecmp(cmd2, "gdblog") == 0) || (strcasecmp(cmd2, "gdblogging") == 0) ||
+                 (strcasecmp(cmd2, "gdb-log") == 0) || (strcasecmp(cmd2, "gdb-logging") == 0) )
+            {
+                if ( (strcasecmp(cmd3, "on") == 0) || (strcmp(cmd3, "1") == 0) )
+                    log_gdb_output = 1;
+                else
+                    log_gdb_output = 0;
+                update_status_win(WIN_NO_REFRESH);
+                if_draw();
+                return;
+            }
+        }
     }
 
     if (command_parse_string(command.c_str())) {
