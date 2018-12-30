@@ -307,6 +307,23 @@ clog_init_path(int id, const char *const path)
         return 1;
     }
     _clog_loggers[id]->opened = 1;
+
+    // if run from sudo, change file owner to original user
+    uid_t uid = getuid();
+    if(uid == 0)
+    {
+        char *uptr = getenv("SUDO_UID");
+        if (uptr != NULL)
+        {
+            uid = (uid_t)atoi(uptr);
+            gid_t gid = -1;
+            char *gptr = getenv("SUDO_GID");
+            if (gptr != NULL)
+                gid = (gid_t)atoi(gptr);
+            fchown(fd, uid, gid);
+        }
+    }
+
     return 0;
 }
 

@@ -257,6 +257,8 @@ static tab_completion_ptr completion_ptr = NULL;
 /* Original terminal attributes */
 static struct termios term_attributes;
 
+int log_gdb_output = 0;
+
 static int is_gdb_tui_command(const char* line)
 {
     size_t i;
@@ -835,6 +837,33 @@ static int init_home_dir(void)
  */
 static void console_output(void *context, const std::string &str) {
     if_print(str.c_str());
+    // to avoid gdb machine interface (MI) logging issue
+    if (log_gdb_output)
+    {
+        FILE *fp = fopen("cgdb.txt", "a");
+        if (fp)
+        {
+            // if run from sudo, change file owner to original user
+            int fd = fileno(fp);
+            uid_t uid = getuid();
+            if(uid == 0)
+            {
+                char *uptr = getenv("SUDO_UID");
+                if (uptr != NULL)
+                {
+                    uid = (uid_t)atoi(uptr);
+                    gid_t gid = -1;
+                    char *gptr = getenv("SUDO_GID");
+                    if (gptr != NULL)
+                        gid = (gid_t)atoi(gptr);
+                    int unused __attribute__((unused)); // ugh
+                    unused = fchown(fd, uid, gid);
+                }
+            }
+            fprintf(fp, "%s", str.c_str());
+            fclose(fp);
+        }
+    }
 }
 
 /**
@@ -1744,12 +1773,12 @@ static void cgdb_start_logging()
      * Change level to CLOG_ERROR to write only error messages.
      *   clog_set_level(CLOG_GDBIO, CLOG_ERROR);
      */
-    clog_set_level(CLOG_GDBIO_ID, CLOG_DEBUG);
+    clog_set_level(CLOG_GDBIO_ID, CLOG_ERROR);
     clog_set_fmt(CLOG_GDBIO_ID, CGDB_CLOG_FORMAT);
 
     /* General cgdb logging. Only logging warnings and debug messages
        by default. */
-    clog_set_level(CLOG_CGDB_ID, CLOG_DEBUG);
+    clog_set_level(CLOG_CGDB_ID, CLOG_ERROR);
     clog_set_fmt(CLOG_CGDB_ID, CGDB_CLOG_FORMAT);
 }
 
@@ -1767,7 +1796,8 @@ int main(int argc, char *argv[])
         } else {
             int c;
             printf("Press any key to continue execution...\n");
-            read(0, &c, 1);
+            int unused __attribute__((unused)); // ugh
+            unused = read(0, &c, 1);
         }
     }
 

@@ -746,6 +746,24 @@ static void if_run_command(struct sviewer *sview, const std::string &command)
         return;
     }
 
+    // to avoid gdb machine interface (MI) logging issue
+    // TODO: add this cmd to parser ...
+    extern int log_gdb_output;
+    if (strcmp(command.c_str(), "set logging on") == 0)
+    {
+        log_gdb_output = 1;
+        update_status_win(WIN_NO_REFRESH);
+        if_draw();
+        return;
+    }
+    else if (strcmp(command.c_str(), "set logging off") == 0)
+    {
+        log_gdb_output = 0;
+        update_status_win(WIN_NO_REFRESH);
+        if_draw();
+        return;
+    }
+
     if (command_parse_string(command.c_str())) {
         if_display_message("Unknown command: ", WIN_NO_REFRESH, 0, "%s",
             command.c_str());

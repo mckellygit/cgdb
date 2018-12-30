@@ -196,6 +196,23 @@ int rline_write_history(struct rline *rline, const char *file)
 
     write_history(file);
 
+    // if run from sudo, change file owner to original user
+    uid_t uid = getuid();
+    if(uid == 0)
+    {
+        char *uptr = getenv("SUDO_UID");
+        if (uptr != NULL)
+        {
+            uid = (uid_t)atoi(uptr);
+            gid_t gid = -1;
+            char *gptr = getenv("SUDO_GID");
+            if (gptr != NULL)
+                gid = (gid_t)atoi(gptr);
+            int unused __attribute__((unused)); // ugh
+            unused = chown(file, uid, gid);
+        }
+    }
+
     return 0;
 }
 
