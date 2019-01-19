@@ -183,7 +183,7 @@ int rline_read_history(struct rline *rline, const char *file)
         return -1;
 
     using_history();
-    stifle_history(100);
+    stifle_history(200);
     read_history(file);
     history_set_pos(history_length);
 
