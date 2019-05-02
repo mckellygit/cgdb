@@ -1,1 +1,3 @@
-./configure CXXFLAGS="-g -O2 -std=c++11"
+# -std=c++11 is added to each Makefile.am now so no longer needed
+#./configure CXXFLAGS="-g -O2 -std=c++11"
+./configure CXXFLAGS="-g -O2"
