@@ -30,18 +30,31 @@
     /** This will instruct TGDB to tell the debugger to finish.  */
         TGDB_FINISH,
     /** 
-     * This will instruct TGDB to tell the debugger to go to the next 
-     * source level instruction.
+     * This will instruct TGDB to tell the debugger to continue to the next
+     * source line - possibly running an entire routine.
      */
         TGDB_NEXT,
+    /**
+     * This will instruct TGDB to tell the debugger to execute one machine
+     * instruction - but if it is a routine, proceed until that returns.
+     */
+        TGDB_NEXTI,
     /** This will instruct TGDB to tell the debugger to (re-)start the program. */
         TGDB_START,
     /** This will instruct TGDB to tell the debugger to (re-)run the program. */
         TGDB_RUN,
     /** This will instruct TGDB to tell the debugger to kill the program. */
         TGDB_KILL,
-    /** This will instruct TGDB to tell the debugger to step. */
+    /**
+     * This will instruct TGDB to tell the debugger to continue until a
+     * different source line is reached.
+     */
         TGDB_STEP,
+    /**
+     * This will instruct TGDB to tell the debugger to execute one machine
+     * instruction.
+     */
+        TGDB_STEPI,
     /** 
      * This will instruct TGDB to tell the debugger to continue running
      * until a source line past the current line.  This is used to avoid

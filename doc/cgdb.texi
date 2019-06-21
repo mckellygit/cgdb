@@ -847,6 +847,10 @@ Move focus to the GDB window.
 @itemx :next
 Send a next command to GDB.
 
+@item :ni
+@itemx :nexti
+Send a nexti command to GDB.
+
 @item :q
 @itemx :quit
 Quit CGDB.
@@ -865,6 +869,10 @@ Send a kill command to GDB.
 @item :s
 @itemx :step
 Send a step command to GDB.
+
+@item :si
+@itemx :stepi
+Send a stepi command to GDB.
 
 @item :syntax
 Turn the syntax on or off.
