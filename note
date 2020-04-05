@@ -4,3 +4,9 @@ make distclean
 # -std=c++11 is added to each Makefile.am now so no longer needed
 #./configure CXXFLAGS="-g -O2 -std=c++11"
 ./configure CXXFLAGS="-g -O2"
+
+# build readline with --exec-prefix=/usr/local --prefix=/usr/local
+# build ncurses with --exec-prefix=/usr/local --prefix=/usr/local --with-shared
+# then edit configure to NOT use libncursesw, but just libncurses ...
+# then
+./configure CXXFLAGS="-g -O2" --with-readline=/usr/local --with-ncurses=/usr/local
